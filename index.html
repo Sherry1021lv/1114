@@ -1,0 +1,1578 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
+    <title>OimiChat · 配置指南</title>
+    <link rel="icon" href="favicon.ico" type="image/x-icon">
+    <link href="https://fonts.googleapis.com/css2?family=Manrope:wght@400;500;600;700&display=swap" rel="stylesheet">
+    <link href="https://fonts.googleapis.com/css2?family=ZCOOL+QingKe+HuangYou&display=swap" rel="stylesheet">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.1/css/all.min.css">
+    <style>
+        /* ===== 全局样式（与控制台保持一致的暗色主题） ===== */
+        :root {
+            --bg: #292A36;
+            --bg-card: #33343f;
+            --bg-card-hover: #3d3e4a;
+            --pink: #FFE165;
+            --purple: #6366F1;
+            --gradient: linear-gradient(135deg, #FFE165, #6366F1);
+            --text: #F1EAE0;
+            --text-dim: rgba(241, 234, 224, 0.65);
+            --text-muted: rgba(241, 234, 224, 0.4);
+            --border: rgba(241, 234, 224, 0.1);
+            --border-hover: rgba(255, 225, 101, 0.35);
+            --radius: 10px;
+            --radius-sm: 6px;
+            --transition: 0.25s ease;
+        }
+
+        * { margin: 0; padding: 0; box-sizing: border-box; }
+        html { font-size: 87.5%; scroll-behavior: smooth; }
+        body {
+            background: var(--bg);
+            color: var(--text);
+            font-family: 'Manrope', -apple-system, 'PingFang SC', 'Hiragino Sans GB', sans-serif;
+            padding: 0 0 60px;
+            min-height: 100vh;
+            overflow-x: hidden;
+        }
+        ::-webkit-scrollbar { width: 4px; }
+        ::-webkit-scrollbar-track { background: transparent; }
+        ::-webkit-scrollbar-thumb { background: var(--purple); border-radius: 4px; }
+
+        /* ===== 顶部导航 ===== */
+        .topbar {
+            background: rgba(10, 10, 15, 0.78);
+            backdrop-filter: blur(20px);
+            padding: 16px 24px;
+            position: sticky; top: 0; z-index: 100;
+            border-bottom: 1px solid var(--border);
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+            gap: 16px;
+        }
+        .brand {
+            font-family: "Manrope", -apple-system, sans-serif;
+            font-size: 1.6rem;
+            display: flex;
+            align-items: center;
+            gap: 10px;
+            color: var(--text);
+        }
+        .brand i {
+            background: var(--gradient);
+            -webkit-background-clip: text;
+            background-clip: text;
+            color: transparent;
+        }
+        .brand small {
+            font-family: -apple-system, sans-serif;
+            font-size: 0.6rem;
+            opacity: 0.4;
+            margin-left: 4px;
+            font-weight: 400;
+            letter-spacing: 0.1em;
+            color: var(--text-muted);
+        }
+
+        /* ===== 侧边栏导航 ===== */
+        .layout {
+            display: flex;
+            max-width: 1200px;
+            margin: 24px auto;
+            padding: 0 24px;
+            gap: 32px;
+        }
+        .sidebar {
+            width: 240px;
+            flex-shrink: 0;
+            position: sticky;
+            top: 90px;
+            align-self: flex-start;
+            background: var(--bg-card);
+            border: 1px solid var(--border);
+            border-radius: var(--radius);
+            padding: 20px;
+            max-height: calc(100vh - 120px);
+            overflow-y: auto;
+        }
+        .sidebar::-webkit-scrollbar { width: 3px; }
+        .sidebar-nav-group {
+            margin-bottom: 24px;
+        }
+        .sidebar-nav-group-title {
+            font-size: 0.7rem;
+            color: var(--text-muted);
+            text-transform: uppercase;
+            letter-spacing: 0.08em;
+            margin-bottom: 10px;
+            padding-left: 8px;
+        }
+        .sidebar-link {
+            display: flex;
+            align-items: center;
+            gap: 10px;
+            padding: 8px 12px;
+            border-radius: var(--radius-sm);
+            color: var(--text-dim);
+            text-decoration: none;
+            font-size: 0.9rem;
+            transition: all var(--transition);
+            margin-bottom: 2px;
+            border: 1px solid transparent;
+        }
+        .sidebar-link:hover {
+            background: var(--bg-card-hover);
+            color: var(--text);
+        }
+        .sidebar-link.active {
+            background: rgba(99, 102, 241, 0.12);
+            color: var(--text);
+            border-color: rgba(99, 102, 241, 0.3);
+        }
+        .sidebar-link i {
+            width: 20px;
+            text-align: center;
+            font-size: 0.85rem;
+            color: var(--purple);
+        }
+
+        /* ===== 主要内容区 ===== */
+        .content {
+            flex: 1;
+            min-width: 0;
+        }
+        .doc-section {
+            margin-bottom: 40px;
+            scroll-margin-top: 80px;
+            animation: fadeUp 0.4s ease;
+        }
+        @keyframes fadeUp {
+            from { opacity: 0; transform: translateY(12px); }
+            to { opacity: 1; transform: translateY(0); }
+        }
+
+        .doc-header {
+            margin-bottom: 24px;
+            padding-bottom: 20px;
+            border-bottom: 1px solid var(--border);
+        }
+        .doc-header h2 {
+            font-family: "Manrope", -apple-system, sans-serif;
+            font-size: 1.6rem;
+            margin-bottom: 6px;
+            display: flex;
+            align-items: center;
+            gap: 12px;
+        }
+        .doc-header h2 i { color: var(--pink); font-size: 1.2rem; }
+        .doc-header p {
+            font-size: 0.9rem;
+            color: var(--text-dim);
+            line-height: 1.7;
+            max-width: 800px;
+        }
+
+        .doc-card {
+            background: var(--bg-card);
+            border: 1px solid var(--border);
+            border-radius: var(--radius);
+            padding: 24px;
+            margin-bottom: 16px;
+            transition: border-color var(--transition);
+        }
+        .doc-card:hover { border-color: var(--border-hover); }
+        .doc-card-title {
+            font-size: 1.1rem;
+            font-weight: 600;
+            margin-bottom: 14px;
+            display: flex;
+            align-items: center;
+            gap: 10px;
+            color: var(--text);
+        }
+        .doc-card-title .badge {
+            font-size: 0.7rem;
+            background: var(--pink);
+            color: #292A36;
+            padding: 2px 8px;
+            border-radius: 12px;
+            font-weight: 700;
+        }
+        .doc-text {
+            font-size: 0.9rem;
+            color: var(--text-dim);
+            line-height: 1.8;
+            margin-bottom: 12px;
+        }
+        .doc-text strong {
+            color: var(--text);
+            font-weight: 600;
+        }
+        .doc-text code {
+            background: rgba(255,225,101,0.12);
+            color: var(--pink);
+            padding: 2px 6px;
+            border-radius: 4px;
+            font-family: monospace;
+            font-size: 0.85em;
+        }
+        .doc-list {
+            padding-left: 20px;
+            margin-bottom: 12px;
+        }
+        .doc-list li {
+            font-size: 0.88rem;
+            color: var(--text-dim);
+            line-height: 1.8;
+            margin-bottom: 6px;
+        }
+        .doc-list li::marker { color: var(--pink); }
+
+        .doc-note {
+            background: rgba(99, 102, 241, 0.08);
+            border-left: 3px solid var(--purple);
+            border-radius: 0 var(--radius-sm) var(--radius-sm) 0;
+            padding: 14px 18px;
+            margin: 16px 0;
+            font-size: 0.85rem;
+            color: var(--text-dim);
+            line-height: 1.7;
+        }
+        .doc-note.tip { background: rgba(255, 225, 101, 0.08); border-left-color: var(--pink); }
+        .doc-note.warn { background: rgba(248, 113, 113, 0.08); border-left-color: #f87171; }
+
+        .doc-step {
+            display: flex;
+            gap: 14px;
+            margin-bottom: 16px;
+            align-items: flex-start;
+        }
+        .doc-step-num {
+            width: 28px;
+            height: 28px;
+            border-radius: 50%;
+            background: var(--gradient);
+            color: #292A36;
+            font-weight: 700;
+            font-size: 0.85rem;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            flex-shrink: 0;
+        }
+        .doc-step-content {
+            flex: 1;
+        }
+        .doc-step-content h4 {
+            font-size: 0.95rem;
+            margin-bottom: 4px;
+            color: var(--text);
+        }
+        .doc-step-content p {
+            font-size: 0.85rem;
+            color: var(--text-dim);
+            line-height: 1.6;
+        }
+
+        /* ===== 图片展示区（自适应大小） ===== */
+        .img-showcase {
+            display: flex;
+            gap: 16px;
+            flex-wrap: wrap;
+            justify-content: center;
+            align-items: flex-start;
+            margin: 20px 0;
+        }
+        .img-item {
+            flex: 1;
+            min-width: 280px;
+            max-width: 480px;
+            border-radius: var(--radius);
+            overflow: hidden;
+            border: 1px solid var(--border);
+            background: rgba(0,0,0,0.2);
+            box-shadow: 0 4px 16px rgba(0,0,0,0.2);
+            transition: transform var(--transition), box-shadow var(--transition);
+        }
+        .img-item:hover {
+            transform: translateY(-4px);
+            box-shadow: 0 8px 24px rgba(255,225,101,0.15);
+        }
+        /* 参考 index.html 中的 data-bg 懒加载方式 */
+        .img-bg {
+            width: 100%;
+            height: auto;
+            min-height: 200px;
+            background-size: contain;
+            background-position: center;
+            background-repeat: no-repeat;
+            background-color: rgba(255,255,255,0.02);
+            display: block;
+        }
+
+        /* ===== 记忆模式分层卡片 ===== */
+        .memory-mode-layer {
+            background: rgba(99, 102, 241, 0.06);
+            border: 1px solid rgba(99, 102, 241, 0.25);
+            border-radius: var(--radius-sm);
+            padding: 16px 18px;
+            margin-bottom: 12px;
+        }
+        .memory-mode-layer.baseline {
+            background: rgba(255, 225, 101, 0.06);
+            border-color: rgba(255, 225, 101, 0.25);
+        }
+        .memory-mode-layer.important {
+            background: rgba(248, 113, 113, 0.06);
+            border-color: rgba(248, 113, 113, 0.3);
+        }
+        .memory-mode-layer.gate {
+            background: rgba(52, 211, 153, 0.06);
+            border-color: rgba(52, 211, 153, 0.3);
+        }
+        .memory-mode-layer-title {
+            font-size: 0.95rem;
+            font-weight: 600;
+            margin-bottom: 10px;
+            color: var(--text);
+            display: flex;
+            align-items: center;
+            gap: 8px;
+        }
+        .memory-mode-layer-title .layer-num {
+            display: inline-flex;
+            align-items: center;
+            justify-content: center;
+            width: 22px;
+            height: 22px;
+            border-radius: 50%;
+            background: var(--purple);
+            color: #fff;
+            font-size: 0.75rem;
+            font-weight: 700;
+            flex-shrink: 0;
+        }
+        .memory-mode-layer.important .layer-num { background: #f87171; }
+        .memory-mode-layer.baseline .layer-num { background: #f59e0b; }
+        .memory-mode-layer.gate .layer-num { background: #34d399; }
+        .memory-mode-layer ul {
+            padding-left: 20px;
+            margin: 0;
+        }
+        .memory-mode-layer li {
+            font-size: 0.85rem;
+            color: var(--text-dim);
+            line-height: 1.8;
+            margin-bottom: 4px;
+        }
+        .memory-mode-layer li::marker { color: var(--pink); }
+        .memory-mode-layer li:last-child { margin-bottom: 0; }
+
+        /* ===== 转发链路图 ===== */
+        .relay-diagram {
+            background: #1e1e28;
+            border: 1px solid var(--border);
+            border-radius: var(--radius);
+            padding: 20px;
+            margin: 16px 0;
+            font-family: 'Courier New', monospace;
+            font-size: 0.82rem;
+            line-height: 1.8;
+            color: #d4d4d4;
+            white-space: pre;
+            overflow-x: auto;
+        }
+        .relay-diagram .hl { color: var(--pink); font-weight: 700; }
+        .relay-diagram .dim { color: rgba(241, 234, 224, 0.45); }
+
+        /* ===== 全屏图片查看器 ===== */
+        .image-viewer {
+            display: none;
+            position: fixed;
+            inset: 0;
+            z-index: 99999;
+            background: rgba(0, 0, 0, 0.95);
+            align-items: center;
+            justify-content: center;
+            cursor: zoom-out;
+        }
+        .image-viewer.active {
+            display: flex;
+        }
+        .image-viewer img {
+            max-width: 95vw;
+            max-height: 95vh;
+            object-fit: contain;
+            border-radius: 8px;
+            box-shadow: 0 0 40px rgba(0, 0, 0, 0.5);
+        }
+        .image-viewer-close {
+            position: absolute;
+            top: 20px;
+            right: 20px;
+            width: 40px;
+            height: 40px;
+            border-radius: 50%;
+            background: rgba(255, 255, 255, 0.2);
+            color: white;
+            font-size: 1.4rem;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            cursor: pointer;
+            transition: background 0.3s;
+        }
+        .image-viewer-close:hover {
+            background: rgba(255, 255, 255, 0.4);
+        }
+
+        /* ===== 响应式 ===== */
+        @media (max-width: 768px) {
+            .layout { flex-direction: column; padding: 0 16px; }
+            .sidebar { width: 100%; position: static; max-height: none; margin-bottom: 24px; }
+            .topbar { padding: 12px 16px; }
+            .brand { font-size: 1.4rem; }
+        }
+    </style>
+</head>
+<body>
+
+    <!-- ===== 顶部标题栏 ===== -->
+    <header class="topbar">
+        <div class="brand"><i class="fa-solid fa-wand-magic-sparkles"></i> OimiChat <small>· 配置指南</small></div>
+    </header>
+
+    <!-- ===== 主体布局：侧边栏 + 内容 ===== -->
+    <div class="layout">
+
+        <!-- ===== 侧边栏导航 ===== -->
+        <aside class="sidebar">
+            <div class="sidebar-nav-group">
+                <div class="sidebar-nav-group-title">起步</div>
+                <a href="#welcome" class="sidebar-link active"><i class="fa-solid fa-rocket"></i> 欢迎</a>
+                <a href="#quickstart" class="sidebar-link"><i class="fa-solid fa-bolt"></i> 快速开始</a>
+            </div>
+            <div class="sidebar-nav-group">
+                <div class="sidebar-nav-group-title">核心配置</div>
+                <a href="#role-import" class="sidebar-link"><i class="fa-solid fa-user-astronaut"></i> 角色导入</a>
+                <a href="#ai-models" class="sidebar-link"><i class="fa-solid fa-brain"></i> AI 模型</a>
+                <a href="#memory" class="sidebar-link"><i class="fa-solid fa-book"></i> 刻忆记忆</a>
+                <a href="#voice" class="sidebar-link"><i class="fa-solid fa-microphone"></i> 语音消息</a>
+                <a href="#emoji" class="sidebar-link"><i class="fa-solid fa-face-smile"></i> 表情包</a>
+            </div>
+            <div class="sidebar-nav-group">
+                <div class="sidebar-nav-group-title">进阶功能</div>
+                <a href="#proactive" class="sidebar-link"><i class="fa-solid fa-paper-plane"></i> 主动消息</a>
+                <a href="#mail" class="sidebar-link"><i class="fa-solid fa-envelope"></i> 邮件来信</a>
+                <a href="#vapi" class="sidebar-link"><i class="fa-solid fa-phone-volume"></i> Vapi电话</a>
+                <a href="#map" class="sidebar-link"><i class="fa-solid fa-map-location-dot"></i> 地图线下</a>
+                <a href="#peek" class="sidebar-link"><i class="fa-solid fa-eye"></i> 窥视</a>
+            </div>
+        </aside>
+
+        <!-- ===== 主内容区 ===== -->
+        <main class="content">
+
+            <!-- 欢迎 -->
+            <section class="doc-section" id="welcome">
+                <div class="doc-header">
+                    <h2><i class="fa-solid fa-rocket"></i> 欢迎使用 OimiChat 控制台</h2>
+                    <p>这份指南将帮助你熟悉控制台中的各项配置。从“角色导入”开始，为你的AI伙伴注入灵魂，然后逐步配置AI模型、语音、记忆等功能，让TA真正成为懂你的存在。</p>
+                </div>
+                <div class="doc-card">
+                    <div class="doc-card-title"><i class="fa-solid fa-circle-info"></i> 指南说明</div>
+                    <p class="doc-text">本指南基于<b>控制台（index1.html）</b>的界面逻辑编写。所有设置项均与页面中的控件一一对应，你可以边看边操作。</p>
+                    <p class="doc-text">如果你在配置过程中遇到问题，请先检查是否已正确获取相关API Key，并确保网络连接畅通。</p>
+                </div>
+            </section>
+
+            <!-- 快速开始 -->
+            <section class="doc-section" id="quickstart">
+                <div class="doc-header">
+                    <h2><i class="fa-solid fa-bolt"></i> 快速开始</h2>
+                    <p>三步让你的AI伙伴上线：</p>
+                </div>
+                <div class="doc-card">
+                    <div class="doc-step">
+                        <div class="doc-step-num">1</div>
+                        <div class="doc-step-content">
+                            <h4>导入角色</h4>
+                            <p>在“角色导入”中为你的伙伴命名、设定性格与世界背景。这是最重要的第一步，决定了TA的灵魂。</p>
+                        </div>
+                    </div>
+                    <div class="doc-step">
+                        <div class="doc-step-num">2</div>
+                        <div class="doc-step-content">
+                            <h4>配置AI模型</h4>
+                            <p>在“AI 模型”中选择一个主对话模型（如DeepSeek、Claude），它是TA大脑的引擎。</p>
+                        </div>
+                    </div>
+                    <div class="doc-step">
+                        <div class="doc-step-num">3</div>
+                        <div class="doc-step-content">
+                            <h4>保存并同步</h4>
+                            <p>完成配置后，点击各页面中的“保存”按钮，TA就会在微信中活过来了。</p>
+                        </div>
+                    </div>
+                </div>
+            </section>
+
+            <!-- 角色导入 (重点) -->
+            <section class="doc-section" id="role-import">
+                <div class="doc-header">
+                    <h2><i class="fa-solid fa-user-astronaut"></i> 角色导入</h2>
+                    <p>这是最核心的配置页面。在这里，你将亲手“创造”你的AI伙伴。</p>
+                </div>
+
+                <!-- ★ 保存生效提示 ★ -->
+                <div class="doc-note warn" style="margin-top: 0; margin-bottom: 16px;">
+                    <i class="fa-solid fa-triangle-exclamation"></i> <strong>重要提示</strong>：本页<strong>所有开关与输入项</strong>（包括“动作神态描写”“联网模式”“Tavily Key”等）均<strong>不会即时生效</strong>，必须点击页面底部的 <strong>“保存角色”</strong> 按钮后才会同步到线上。若未保存直接退出或刷新页面，本次修改将<strong>全部回退</strong>，恢复为上一次保存的配置。
+                </div>
+
+                <!-- ★ 重构角色设定的缓存提示 ★ -->
+                <div class="doc-note warn" style="margin-top: 0; margin-bottom: 16px;">
+                    <i class="fa-solid fa-arrows-rotate"></i> <strong>重构角色设定后需等待</strong>：当你<strong>重构角色设定</strong>（大幅修改人格、经历、世界背景等核心内容）并保存后，由于系统存在<strong>缓存机制</strong>，新的设定通常需要 <strong>5~10 分钟</strong> 才会在对话端完全加载生效。等待期间，伙伴可能仍按旧设定回复，这是正常现象。请<strong>耐心等待</strong>，不要因“没变化”而反复修改、反复保存，否则每次保存都会重新开始计时。
+                </div>
+
+                <!-- ★ 回复时长与缓存提示 ★ -->
+                <div class="doc-note" style="margin-top: 0; margin-bottom: 20px;">
+                    <i class="fa-solid fa-hourglass-half"></i> <strong>回复时长提醒</strong>：伙伴每次回复通常需要<strong>一分钟左右</strong>（受模型选择、联网搜索、记忆总结和网络状况影响）。发送消息后请<strong>耐心等待一会儿</strong>，不要连续重复发送，以免造成重复回复或额外消耗额度。另外，<strong>头像上传</strong>和<strong>“动作神态描写”等开关</strong>保存后也存在<strong>一定时间缓存</strong>（通常 1~3 分钟），若发现对话端尚未更新，请稍等片刻再试，无需反复修改或重新上传。
+                </div>
+
+                <div class="doc-card">
+                    <div class="doc-card-title"><i class="fa-solid fa-id-badge"></i> 基础设定</div>
+                    <ul class="doc-list">
+                        <li><strong>头像</strong>：上传一张你喜欢的角色头像。图片上传后需等待缓存同步，通常几分钟内会在对话端显示；若未立即更新，请勿反复上传，稍后重新进入即可。</li>
+                        <li><strong>名称</strong>：给你的伙伴取一个名字，一个你呼唤TA时觉得温暖的名字。</li>
+                        <li><strong>人格设定</strong>：用几句话描述TA的性格，例如“温柔、细腻、善于倾听、偶尔幽默”。<b>重构人格设定后，需等待 5~10 分钟缓存刷新才会在对话端生效。</b></li>
+                        <li><strong>角色经历</strong>：TA的过去，TA的故事。这会深刻影响TA的言行举止。<b>大改经历同样受缓存影响，保存后请耐心等待。</b></li>
+                        <li><strong>世界背景</strong>：TA生活在怎样的世界？是赛博都市、魔法森林，还是日常街角？</li>
+                    </ul>
+                    <div class="doc-note tip" style="margin-bottom: 0;">
+                        <i class="fa-solid fa-clock"></i> <strong>重构设定 = 重新等待</strong>：人格、经历、世界背景属于角色的“核心设定”，一旦重构并保存，缓存会重新加载，通常需要 <strong>5~10 分钟</strong>。建议一次性改好再保存，避免分批修改导致反复等待。
+                    </div>
+                </div>
+
+                <div class="doc-card">
+                    <div class="doc-card-title"><i class="fa-solid fa-toggle-on"></i> 行为开关</div>
+                    <p class="doc-text">开启这些开关，可以让TA的行为更丰富、更智能。<strong style="color: var(--pink);">（改动需点击底部“保存角色”后生效）</strong></p>
+                    <ul class="doc-list">
+                        <li><strong>动作神态描写</strong>：开启后，回复会带有（）内的动作、神态、旁白描写。<b>保存后存在一定时间缓存，通常 1~3 分钟后才会在对话端完全生效。</b></li>
+                        <li><strong>联网模式</strong>：开启后，AI可联网搜索获取实时信息（新闻、天气、赛事等）。<b>此开关与Tavily Key紧密相关。</b></li>
+                        <li><strong>天气检测</strong>：开启后，实时获取当地天气（基于免费wttr.in服务）。</li>
+                        <li><strong>阅读网页</strong>：开启后，发送网页链接时AI会自动抓取并阅读网页正文后回答。</li>
+                    </ul>
+                    <div class="doc-note tip" style="margin-bottom: 0;">
+                        <i class="fa-solid fa-clock"></i> <strong>缓存说明</strong>：“动作神态描写”等开关即使已经点击“保存角色”，配置同步到对话端仍存在<strong>一定时间缓存</strong>。若发现回复尚未带上动作描写，请等待几分钟再测试，不必反复开关。若同时重构了角色核心设定，则需按 <strong>5~10 分钟</strong> 的标准等待。
+                    </div>
+                </div>
+
+                <!-- Tavily Key 配置详解 -->
+                <div class="doc-card" id="tavily-key-guide" style="border: 1px solid rgba(255, 225, 101, 0.3);">
+                    <div class="doc-card-title"><i class="fa-solid fa-globe"></i> <span style="color: var(--pink);">Tavily Key（联网搜索）</span> <span class="badge">必读</span></div>
+                    <p class="doc-text">Tavily 是一个专为AI优化的搜索引擎API，它能让你的伙伴在聊天时实时查询信息，而不是只依赖训练数据中的“旧知识”。</p>
+                    <p class="doc-text">开启“联网模式”后，你的伙伴将拥有连接互联网的能力。以下是配置 Tavily 的详细步骤和界面展示：</p>
+
+                    <!-- 图片展示区：使用 data-bg 懒加载方式，自适应大小 -->
+                    <div class="img-showcase">
+                        <div class="img-item">
+                            <div class="img-bg" data-bg="link1.jpg"></div>
+                        </div>
+                        <div class="img-item">
+                            <div class="img-bg" data-bg="link2.jpg"></div>
+                        </div>
+                    </div>
+
+                    <div class="doc-note warn">
+                        <i class="fa-solid fa-triangle-exclamation"></i> <strong>注意</strong>：仅仅开启“联网模式”开关是不够的，你必须<strong>填写 Tavily Key</strong>，否则AI的联网搜索请求会失败，或无法正确返回实时信息。
+                    </div>
+
+                    <h4 style="margin-bottom: 12px; color: var(--text); font-size: 1rem;">如何配置：</h4>
+                    <div class="doc-step">
+                        <div class="doc-step-num">1</div>
+                        <div class="doc-step-content">
+                            <h4>获取 Tavily API Key</h4>
+                            <p>访问 <code>https://tavily.com</code> 并注册（免费版每月提供1000次搜索额度）。在控制台的“API Keys”页面中复制你的Key，通常以 <code>tvly-</code> 开头。</p>
+                        </div>
+                    </div>
+                    <div class="doc-step">
+                        <div class="doc-step-num">2</div>
+                        <div class="doc-step-content">
+                            <h4>在控制台中填入</h4>
+                            <p>回到“角色导入”页面，开启“联网模式”开关。此时会在下方展开“Tavily Key”输入框，将你的Key粘贴进去。</p>
+                            <p>输入后会自动保存（防抖），无需点击额外按钮。</p>
+                        </div>
+                    </div>
+                    <div class="doc-step">
+                        <div class="doc-step-num">3</div>
+                        <div class="doc-step-content">
+                            <h4>保存角色</h4>
+                            <p>完成所有角色设定后，务必点击页面下方的 <strong>“保存角色”</strong> 按钮。系统会同步到企业微信应用，让新配置立即生效。</p>
+                        </div>
+                    </div>
+
+                    <div class="doc-note tip">
+                        <i class="fa-solid fa-lightbulb"></i> <strong>高级参数</strong>：Tavily 支持参数：<code>query</code>（搜索关键词）、<code>search_depth</code>（basic/advanced）、<code>max_results</code>（返回条数）、<code>include_answer</code>（是否生成AI总结）、<code>topic</code>（general/news）、<code>time_range</code>（时间范围）。这些参数通常由后端系统自动控制，你无需手动配置，但了解它们有助于理解联网工作方式。
+                    </div>
+                </div>
+
+                <!-- 秩序则 -->
+                <div class="doc-card">
+                    <div class="doc-card-title"><i class="fa-solid fa-scale-balanced"></i> 秩序则（进阶）</div>
+                    <p class="doc-text">秩序则是角色的行为边界和约束。</p>
+                    <ul class="doc-list">
+                        <li><strong>禁止输出词句</strong>：不希望AI出现的词句。这些词会被拼入system prompt，AI在任何情况下都不得输出。</li>
+                        <li><strong>正则替换</strong>：对AI回复做硬性字符替换。例如“小美=>小丽”，或“\d{4,}=>****”（将4位以上数字打码）。这是第二道防线，不依赖模型理解。</li>
+                        <li><strong>偏好表述</strong>：希望AI优先使用的词句或风格。</li>
+                    </ul>
+                    <div class="doc-note tip" style="margin-bottom: 0;">
+                        <i class="fa-solid fa-clock"></i> <strong>缓存提醒</strong>：秩序则属于角色核心设定的一部分，修改并保存后同样受缓存影响，通常需要 <strong>5~10 分钟</strong> 才会在对话端生效。
+                    </div>
+                </div>
+            </section>
+
+            <!-- AI 模型 -->
+            <section class="doc-section" id="ai-models">
+                <div class="doc-header">
+                    <h2><i class="fa-solid fa-brain"></i> AI 模型</h2>
+                    <p>配置驱动伙伴智慧的“大脑”。</p>
+                </div>
+
+                <!-- ★ AI 模型页保存生效提示 ★ -->
+                <div class="doc-note warn" style="margin-top: 0; margin-bottom: 16px;">
+                    <i class="fa-solid fa-triangle-exclamation"></i> <strong>重要提示</strong>：不论你是选择<strong>官方套餐</strong>，还是填写<strong>自定义接入</strong>，所有设定都<strong>不会即时生效</strong>，务必点击页面<strong>最底部的「保存」按钮</strong>后才会同步生效。若未保存直接退出或刷新页面，本次修改将<strong>全部回退</strong>，恢复为上一次保存的配置。
+                </div>
+
+                <!-- ★ 官方与自定义互斥提示 ★ -->
+                <div class="doc-note warn" style="margin-top: 0; margin-bottom: 20px;">
+                    <i class="fa-solid fa-right-left"></i> <strong>官方套餐与自定义接入互斥</strong>：二者<strong>不能同时启用</strong>。如果你当前使用「官方套餐」，想改为「自定义接入」，需要<strong>先清除官方配置</strong>再填写自定义 Key；反之亦然。切换前系统会给出冲突提示，请按提示操作，避免两边都配置导致生效混乱。
+                </div>
+
+                <div class="doc-card">
+                    <div class="doc-card-title"><i class="fa-solid fa-list-check"></i> 官方套餐</div>
+                    <p class="doc-text">平台提供多条主流模型线路，点击平台（如Claude、DeepSeek、Gemini）可展开旗下模型进行选择。</p>
+                    <div class="doc-note">
+                        <i class="fa-solid fa-circle-info"></i> 选择模型后，页面右上角会显示已选状态。若已配置自定义模型，切换官方前会提示冲突。
+                    </div>
+                    <p class="doc-text"><strong>对话参数</strong>：<br>
+                        - <b>模型情感强度</b>：调节AI回复的情感浓度，默认1.5。<br>
+                        - <b>图像能力</b>：选择视觉识别（如gpt-4o）和图像生成模型。<br>
+                        - <b>记忆总结模型</b>：用于自动提炼长期记忆，默认gpt-4o-mini。
+                    </p>
+
+                    <!-- ★ 图像能力配置说明 ★ -->
+                    <div class="doc-note warn" style="margin-top: 0;">
+                        <i class="fa-solid fa-images"></i> <strong>图像能力配置说明（图生图必看）</strong><br>
+                        如果你的目标是<strong>生成的图像与传入的图像保持一致</strong>（也就是图生图），<strong>仅仅配置识图模型（视觉识别模型）是不够的</strong>，<strong>一定要配置支持图生图的生图模型</strong>。否则传入的图片只会被识图模型识别成一段形象描述，生图模型仅参考这段文字描述来生成，最终生成的图片不会与传入的图片保持一致。
+                    </div>
+
+                    <p class="doc-text"><strong>角色参照</strong>：上传一张参考照片并描述角色形象，当你在对话中表达想要图片时，AI 会根据这张参照照片自主调用生图接口，让生成的图片更接近你心中的 TA。</p>
+
+                    <!-- ★ 图生图模型支持说明 ★ -->
+                    <div class="doc-note warn" style="margin-bottom: 0;">
+                        <i class="fa-solid fa-image"></i> <strong>图生图模型支持说明</strong><br>
+                        经过实际测试，目前<strong>图生图模型仅豆包系列能够正常测试通过</strong>，其他厂商的图生图接口可能存在兼容性问题，暂时不建议作为首选。
+                        <ul class="doc-list" style="margin-top: 8px; margin-bottom: 0;">
+                            <li><strong>豆包系列（Doubao）</strong>：图生图测试通过，可正常使用。</li>
+                            <li><strong>其他厂商</strong>：未通过测试。若配置后图生图无法正常生成或报错，请切换为豆包系列图生图模型。</li>
+                            <li>如果你想使用「照片作为参考、生成相近形象」的图生图能力，请务必把<strong>图像生成模型</strong>选为豆包系列。</li>
+                        </ul>
+                    </div>
+
+                    <div class="doc-note tip" style="margin-bottom: 0;">
+                        <i class="fa-solid fa-floppy-disk"></i> <strong>别忘了保存</strong>：选好官方模型后，仍必须点击页面<strong>最底部</strong>的「保存」按钮，否则本次选择不会生效，退出后将回退为原配置。
+                    </div>
+                </div>
+
+                <!-- ★ 语音识别支持说明 ★ -->
+                <div class="doc-card">
+                    <div class="doc-card-title"><i class="fa-solid fa-microphone-lines"></i> 语音识别（STT）支持说明</div>
+                    <p class="doc-text">经过实际测试，目前<strong>语音识别仅 ChatGPT（OpenAI）和智谱</strong>能够正常测试成功。其他厂商的语音识别接口可能存在兼容性问题，暂时不建议作为首选。</p>
+                    <ul class="doc-list">
+                        <li><strong>ChatGPT / OpenAI</strong>：语音识别测试通过，可正常使用。</li>
+                        <li><strong>智谱</strong>：语音识别测试通过，可正常使用。</li>
+                        <li><strong>其他厂商</strong>：未通过测试。若配置后无法识别语音，请切换为上述两家之一。</li>
+                    </ul>
+                    <div class="doc-note tip" style="margin-bottom: 0;">
+                        <i class="fa-solid fa-lightbulb"></i> 配置语音识别后，仍需点击页面<strong>最底部</strong>的「保存」按钮才会生效。若未保存直接退出，本次语音识别配置将回退。
+                    </div>
+                </div>
+
+                <div class="doc-card">
+                    <div class="doc-card-title"><i class="fa-solid fa-key"></i> 自定义接入</div>
+                    <p class="doc-text">如果你有自己的API Key，可以在这里配置专属模型。</p>
+                    <ul class="doc-list">
+                        <li>填写<strong>厂商</strong>（OpenAI、DeepSeek、Claude等）和<strong>模型名称</strong>。</li>
+                        <li>填入你的<strong>API Key</strong>（会被加密存储，子模型留空则复用主Key）。</li>
+                        <li>其他子模型（图像识别、语音识别等）可独立配置，或复用主对话配置。</li>
+                    </ul>
+
+                    <!-- ★ Key 值安全设计说明 ★ -->
+                    <div class="doc-note tip">
+                        <i class="fa-solid fa-shield-halved"></i> <strong>为什么退出后看不到自己的 Key 值？</strong><br>
+                        这是<strong>刻意的安全设计</strong>，不是 Bug。你的明文 Key <strong>永远不会返回给前端</strong>，这样做可以有效防止 <strong>XSS 攻击</strong>、<strong>浏览器恶意扩展</strong>、以及<strong>抓包泄露</strong>等风险。因此：
+                        <ul class="doc-list" style="margin-top: 8px; margin-bottom: 8px;">
+                            <li>退出页面再进入时，输入框里<strong>不会显示完整 Key</strong>，这是正常的。</li>
+                            <li>前端只能拿到<strong>掩码后的 Key</strong>，并且掩码是放在<strong>状态栏文字</strong>里的，例如：<code>已配置：OpenAI Key sk-1...abcd</code>，而不是填入输入框。</li>
+                            <li>状态栏文字提示你“已配置成功”，但<strong>输入框为空</strong>是预期行为。</li>
+                            <li>如果你想更换 Key，直接在输入框里<strong>填入新的 Key</strong> 并保存即可；不需要、也无法“查看旧 Key”。</li>
+                        </ul>
+                        这个设计遵循“<strong>最小暴露原则</strong>”：前端永远不知道完整密钥，只让后端持有。即使前端被攻破，攻击者也无法从页面读到你的 Key。
+                    </div>
+
+                    <div class="doc-note warn" style="margin-bottom: 0;">
+                        <i class="fa-solid fa-triangle-exclamation"></i> <strong>注意</strong>：官方套餐和自定义接入互斥，配置自定义前需先清除官方配置。填写完自定义 Key 后，同样需要点击页面<strong>最底部</strong>的「保存」按钮才会生效。
+                    </div>
+                </div>
+            </section>
+
+            <!-- 刻忆记忆 -->
+            <section class="doc-section" id="memory">
+                <div class="doc-header">
+                    <h2><i class="fa-solid fa-book"></i> 刻忆 · 记忆系统</h2>
+                    <p>让AI拥有“长久记忆”，越聊越懂你。</p>
+                </div>
+
+                <!-- ★ 概念解释：记忆 vs 记忆库 ★ -->
+                <div class="doc-card" style="border: 1px solid rgba(255, 225, 101, 0.3);">
+                    <div class="doc-card-title"><i class="fa-solid fa-circle-question"></i> <span style="color: var(--pink);">先分清两个概念：记忆 与 记忆库</span></div>
+                    <p class="doc-text">刻忆系统里有两个容易混淆的概念，它们区别在于<strong>你是否接入了自己的 Supabase</strong>：</p>
+
+                    <div class="doc-note" style="margin-top: 0;">
+                        <i class="fa-solid fa-layer-group"></i> <strong>「记忆」</strong>：指<strong>没有接入 Supabase</strong> 的用户使用的<strong>平台长期记忆区</strong>。<br>
+                        你可以在「记忆」区域查看、修改、并在下方植入记忆。
+                    </div>
+
+                    <div class="doc-note" style="margin-top: 0; background: rgba(99,102,241,0.12); border-left-color: var(--purple);">
+                        <i class="fa-solid fa-database"></i> <strong>「记忆库」</strong>：指<strong>已经接入 Supabase</strong> 的用户使用的<strong>专属长期记忆区</strong>（数据存在你自己的数据库里）。<br>
+                        你可以在「记忆库」区域查看、修改、并在下方植入记忆。
+                    </div>
+
+                    <p class="doc-text" style="margin-top: 14px;"><strong>两者的容量与展示规则：</strong></p>
+                    <ul class="doc-list">
+                        <li><strong>「记忆」</strong>（未接入 Supabase）：<strong>最多保留 100 条</strong>，超出后自动裁剪（丢弃最旧的）；<strong>但展现在「记忆」区给人看的，始终是最新的 50 条</strong>。可以修改，可以在下方区域「植入记忆」。</li>
+                        <li><strong>「记忆库」</strong>（已接入 Supabase）：<strong>无上限记忆条数</strong>（存你的 Supabase，能存多少看你的库）；<strong>但展现在「记忆库」区的，依然只有最新的 50 条</strong>。可以修改，可以在下方区域「植入记忆」。</li>
+                    </ul>
+
+                    <div class="doc-note tip" style="margin-bottom: 0;">
+                        <i class="fa-solid fa-lightbulb"></i> <strong>记住一句话</strong>：不管有没有接 Supabase，<strong>界面上永远只给你看最新 50 条</strong>；区别只在于<strong>后台到底存了多少、存在哪里</strong>——「记忆」封顶 100 条在平台，「记忆库」无上限在你自己的 Supabase。
+                    </div>
+                </div>
+
+                <!-- ★ 记忆模式介绍 ★ -->
+                <div class="doc-card" style="border: 1px solid rgba(99, 102, 241, 0.35);">
+                    <div class="doc-card-title"><i class="fa-solid fa-brain"></i> <span style="color: var(--pink);">记忆模式：分层召回 + 预算闸门</span></div>
+                    <p class="doc-text">OimiChat 不是简单“把最近的记忆全塞进去”，而是<strong>分层召回 + 优先级排序 + token 预算闸门</strong>：重要信息保底、相关记忆精准、prompt 长度可控。整条链路按以下 6 层执行：</p>
+
+                    <!-- ⓪ 重要记忆直取 -->
+                    <div class="memory-mode-layer important">
+                        <div class="memory-mode-layer-title"><span class="layer-num">0</span> 重要记忆直取（最高优先级）</div>
+                        <ul>
+                            <li>从全库查 <code>importance ≥ 5</code> 的记忆（人生级事件：生日、家人、重大决定）。</li>
+                            <li><strong>无条件注入</strong>，不看相似度、不参与排序。</li>
+                            <li>最多 20 条。</li>
+                        </ul>
+                    </div>
+
+                    <!-- ① 语义/向量检索 -->
+                    <div class="memory-mode-layer">
+                        <div class="memory-mode-layer-title"><span class="layer-num">1</span> 语义/向量检索相关记忆（有提问时触发）</div>
+                        <ul>
+                            <li>候选池：从「最近 200 条」扩到「全库分页拉取，最多 5000 条」。</li>
+                            <li>优先 <code>_vector_search_memories</code>（启用向量索引时）。</li>
+                            <li>失败/无命中 → 回退 <code>_keyword_search_memories</code>（BM25 关键词）。</li>
+                            <li>两路的候选池都扩到全库（不再是最近 200 条）。</li>
+                            <li>相似度阈值 <strong>0.30</strong>。</li>
+                            <li>最多注入 <strong>10 条</strong>。</li>
+                        </ul>
+                    </div>
+
+                    <!-- ② 常驻基线 -->
+                    <div class="memory-mode-layer baseline">
+                        <div class="memory-mode-layer-title"><span class="layer-num">2</span> 常驻基线：最近 topN 条记忆（默认 30）</div>
+                        <ul>
+                            <li>候选池保持最近 <strong>300 条</strong>不变（"近期"语义不该扩全库）。</li>
+                            <li>排序分 = <code>importance + 3×e^(-days/180) + min(access_count×0.3, 3)</code>。</li>
+                            <li>再按时间由旧到新注入。</li>
+                        </ul>
+                    </div>
+
+                    <!-- ③ 最近 N 条历史 -->
+                    <div class="memory-mode-layer">
+                        <div class="memory-mode-layer-title"><span class="layer-num">3</span> 最近 N 条历史消息（默认 20，可配）</div>
+                        <ul>
+                            <li>注入 AI 上下文的最近聊天消息条数，默认 20。</li>
+                        </ul>
+                    </div>
+
+                    <!-- ④ 用户长期偏好 -->
+                    <div class="memory-mode-layer">
+                        <div class="memory-mode-layer-title"><span class="layer-num">4</span> 用户长期偏好（AutoClaw 卡片）</div>
+                        <ul>
+                            <li>来自 AutoClaw 卡片记录的用户长期偏好，作为上下文补充。</li>
+                        </ul>
+                    </div>
+
+                    <!-- ⑤ 矛盾记忆规则 -->
+                    <div class="memory-mode-layer">
+                        <div class="memory-mode-layer-title"><span class="layer-num">5</span> 矛盾记忆规则</div>
+                        <ul>
+                            <li>越靠后越新，冲突时<strong>以最新为准</strong>。</li>
+                        </ul>
+                    </div>
+
+                    <!-- ⑥ token 预算闸门 -->
+                    <div class="memory-mode-layer gate">
+                        <div class="memory-mode-layer-title"><span class="layer-num">6</span> token 预算闸门（最后一道关）</div>
+                        <ul>
+                            <li>把 ⓪①② 三路结果按优先级排队：<strong>⓪ &gt; ① &gt; ②</strong>。</li>
+                            <li>逐个累加 token，超 <strong>2000</strong> 就整段丢弃低优先级段。</li>
+                            <li>结果：注入 prompt 的记忆<strong>恒定 ≤ 2000 token</strong>（候选池拉 200 条还是 5000 条，注入长度都一样）。</li>
+                        </ul>
+                    </div>
+
+                    <div class="doc-note tip" style="margin-bottom: 0;">
+                        <i class="fa-solid fa-lightbulb"></i> <strong>一句话总结</strong>：重要记忆无条件保底，相关记忆按语义精准召回，近期记忆按重要性和新鲜度常驻，历史消息和偏好补充上下文，最后用 2000 token 预算统一裁剪——<strong>既记得住关键事，又不会把 prompt 撑爆</strong>。
+                    </div>
+                </div>
+
+                <!-- ★ 数据迁移说明 ★ -->
+                <div class="doc-card" style="border: 1px solid rgba(99, 102, 241, 0.35);">
+                    <div class="doc-card-title"><i class="fa-solid fa-right-left"></i> 记忆 ↔ 记忆库 数据迁移规则</div>
+                    <p class="doc-text">如果你中途切换了记忆存储方式（比如从平台库改用自己的 Supabase，或反过来），系统会按以下规则自动迁移数据，不用你手动复制粘贴：</p>
+
+                    <div class="doc-step">
+                        <div class="doc-step-num">1</div>
+                        <div class="doc-step-content">
+                            <h4>从「记忆」切换到「记忆库」（接入 Supabase）</h4>
+                            <p>如果你一开始用平台库（记忆），后来配置了 Supabase（记忆库），系统会把平台库中<strong>保留的 100 条记忆</strong>整体<strong>迁移到你的 Supabase</strong>，之后新记忆继续写入 Supabase。</p>
+                        </div>
+                    </div>
+
+                    <div class="doc-step">
+                        <div class="doc-step-num">2</div>
+                        <div class="doc-step-content">
+                            <h4>从「记忆库」切换到「记忆」（清除 Supabase）</h4>
+                            <p>如果你一开始用自己的 Supabase（记忆库），后来改回平台库（记忆），系统会<strong>从 Supabase 库中挑选最新的 100 条记忆</strong>迁移到平台库，之后新记忆继续写入平台库。</p>
+                        </div>
+                    </div>
+
+                    <div class="doc-note warn" style="margin-bottom: 0;">
+                        <i class="fa-solid fa-triangle-exclamation"></i> <strong>注意</strong>：迁移只保留上述条数（100 条封顶），Supabase 里超过 100 条的旧记忆不会迁移回平台库，但<strong>会继续留在你的 Supabase 中</strong>，以后再次接入 Supabase 时依然可用。切换前请评估好是否需要保留更早的记忆。
+                    </div>
+                </div>
+
+                <div class="doc-card">
+                    <div class="doc-card-title"><i class="fa-solid fa-sliders"></i> 记忆设置</div>
+                    <ul class="doc-list">
+                        <li><strong>记忆总结间隔</strong>：每累计 N 条消息自动总结一条长期记忆（默认 30）。</li>
+                        <li><strong>最近 N 条历史注入</strong>：注入 AI 上下文的最近聊天消息条数（默认 20）。</li>
+                        <li><strong>topN 条长期记忆注入</strong>：常驻注入的近期记忆条数（默认 30）。</li>
+                    </ul>
+                </div>
+
+                <!-- ★ 向量索引（推荐豆包） ★ -->
+                <div class="doc-card" style="border: 1px solid rgba(99, 102, 241, 0.35);">
+                    <div class="doc-card-title"><i class="fa-solid fa-vector-square"></i> 向量索引</div>
+                    <p class="doc-text">开启后可替代默认的语义检索，通过你提供的向量服务进行更精准的记忆召回。需要填写厂商、向量模型、API Key 和接口地址。</p>
+                    <div class="doc-note tip" style="margin-top: 0; margin-bottom: 0;">
+                        <i class="fa-solid fa-circle-check"></i> <strong>推荐使用：豆包（Doubao）厂商</strong><br>
+                        经过实际测试，<strong>向量索引推荐使用豆包厂商</strong>，测试通过、可正常召回记忆。其他厂商的向量接口可能存在兼容性问题，若配置后无法召回或报错，建议切换到豆包向量模型。填写完向量相关配置后，仍需点击页面<strong>最底部</strong>的「保存」按钮才会生效。
+                    </div>
+                </div>
+
+                <!-- ★ 接入自己的记忆库 ★ -->
+                <div class="doc-card" style="border: 1px solid rgba(99, 102, 241, 0.35);">
+                    <div class="doc-card-title"><i class="fa-solid fa-database"></i> 接入自己的记忆库</div>
+                    <p class="doc-text">填写你的 Supabase 项目信息，长期记忆将永久存储于你自己的数据库中。</p>
+
+                    <!-- Supabase URL 教程 -->
+                    <h4 style="margin-bottom: 10px; color: var(--text); font-size: 1rem;">Supabase URL</h4>
+                    <p class="doc-text">在 Supabase 控制台复制你的 Project URL，形如 <code>https://xxxx.supabase.co</code>。操作步骤如下：</p>
+                    <div class="doc-step">
+                        <div class="doc-step-num">1</div>
+                        <div class="doc-step-content">
+                            <h4>进入 Project Settings</h4>
+                            <p>登录 Supabase 控制台，打开你的项目，点击左侧边栏底部的 <strong>Project Settings</strong>（齿轮图标）。</p>
+                        </div>
+                    </div>
+                    <div class="doc-step">
+                        <div class="doc-step-num">2</div>
+                        <div class="doc-step-content">
+                            <h4>进入 API 页面并复制 Project URL</h4>
+                            <p>在 Project Settings 中点击 <strong>API</strong>，找到 <strong>Project URL</strong>，点击复制即可。把这个 URL 填入 OimiChat 的「Supabase URL」输入框。</p>
+                        </div>
+                    </div>
+
+                    <!-- Supabase URL 教程图片：两张 -->
+                    <div class="img-showcase">
+                        <div class="img-item">
+                            <div class="img-bg" data-bg="supabase-url-1.jpg"></div>
+                        </div>
+                        <div class="img-item">
+                            <div class="img-bg" data-bg="supabase-url-2.jpg"></div>
+                        </div>
+                    </div>
+
+                    <!-- Service Role Key 教程 -->
+                    <h4 style="margin-bottom: 10px; margin-top: 20px; color: var(--text); font-size: 1rem;">Service Role Key</h4>
+                    <p class="doc-text">Service Role Key 是 Supabase 的<strong>服务端密钥</strong>，拥有完整数据库权限，<strong>只填在 OimiChat 控制台</strong>，不要泄露给他人。操作步骤如下：</p>
+                    <div class="doc-step">
+                        <div class="doc-step-num">1</div>
+                        <div class="doc-step-content">
+                            <h4>进入 API Keys 区域</h4>
+                            <p>在 Project Settings → API 页面中，向下滚动到 <strong>Project API keys</strong> 区域。</p>
+                        </div>
+                    </div>
+                    <div class="doc-step">
+                        <div class="doc-step-num">2</div>
+                        <div class="doc-step-content">
+                            <h4>找到 service_role 密钥</h4>
+                            <p>在密钥列表中找到标注为 <strong>service_role</strong> 的那一行（通常带 secret 标签），不要使用 anon 公钥。</p>
+                        </div>
+                    </div>
+                    <div class="doc-step">
+                        <div class="doc-step-num">3</div>
+                        <div class="doc-step-content">
+                            <h4>点击 Reveal 显示密钥</h4>
+                            <p>点击该行右侧的 <strong>Reveal</strong> 按钮，输入你的 Supabase 账号密码确认后，密钥会显示出来。</p>
+                        </div>
+                    </div>
+                    <div class="doc-step">
+                        <div class="doc-step-num">4</div>
+                        <div class="doc-step-content">
+                            <h4>复制并填入 OimiChat</h4>
+                            <p>复制完整的 service_role key，粘贴到 OimiChat 的「Service Role Key」输入框，然后点击页面最底部的「保存」按钮。</p>
+                        </div>
+                    </div>
+
+                    <!-- Service Role Key 教程图片：四张 -->
+                    <div class="img-showcase">
+                        <div class="img-item">
+                            <div class="img-bg" data-bg="service-role-key-1.jpg"></div>
+                        </div>
+                        <div class="img-item">
+                            <div class="img-bg" data-bg="service-role-key-2.jpg"></div>
+                        </div>
+                        <div class="img-item">
+                            <div class="img-bg" data-bg="service-role-key-3.jpg"></div>
+                        </div>
+                        <div class="img-item">
+                            <div class="img-bg" data-bg="service-role-key-4.jpg"></div>
+                        </div>
+                    </div>
+
+                    <div class="doc-note warn" style="margin-bottom: 0;">
+                        <i class="fa-solid fa-triangle-exclamation"></i> <strong>安全提醒</strong>：Service Role Key 权限极高，请勿写进前端代码、截图分享或提交到公开仓库。只粘贴到 OimiChat 控制台的记忆库配置中，并确保点击「保存」后生效。接入 Supabase 后，记忆区自动切换为「记忆库」模式：无上限存储，界面仍只展示最新 50 条。
+                    </div>
+                </div>
+
+                <!-- ★ 用户自建 Supabase 表 ★ -->
+                <div class="doc-card">
+                    <div class="doc-card-title"><i class="fa-solid fa-table"></i> 用户自建 Supabase 表</div>
+                    <p class="doc-text">如果你使用自己的 Supabase 作为记忆库，需要先在你的 Supabase 项目中创建所需的数据表。<strong>建表 SQL 由 OimiChat 控制台统一提供并维护</strong>，你只需从控制台复制，然后在 Supabase 中执行即可，无需手动编写，能确保与当前版本匹配。</p>
+
+                    <div class="doc-note tip" style="margin-top: 0;">
+                        <i class="fa-solid fa-copy"></i> <strong>获取 SQL 的位置</strong>：登录 OimiChat 控制台 → <strong>刻忆记忆 → 记忆库</strong> 区域 → 点击 <strong>「复制建表 SQL」</strong> 按钮，完整 SQL 会自动复制到你的剪贴板。
+                    </div>
+
+                    <h4 style="margin-bottom: 12px; color: var(--text); font-size: 1rem;">在 Supabase 中执行建表 SQL：</h4>
+
+                    <div class="doc-step">
+                        <div class="doc-step-num">1</div>
+                        <div class="doc-step-content">
+                            <h4>登录 Supabase 官网并创建项目</h4>
+                            <p>访问 <a href="https://supabase.com/dashboard" target="_blank" style="color: var(--pink); text-decoration: underline;">https://supabase.com/dashboard</a>，注册或登录你的账号。</p>
+                            <p>点击 <strong>New Project</strong> 创建新项目，填写项目名称、设置数据库密码（请牢记），选择离你最近的区域后点击 <strong>Create new project</strong>。</p>
+                            <p>项目创建完成后，点击右上角的 <strong>三条杠</strong> 菜单进入项目控制台。</p>
+                        </div>
+                    </div>
+
+                    <!-- 图片占位：supabase1.jpg -->
+                    <div class="img-showcase">
+                        <div class="img-item">
+                            <div class="img-bg" data-bg="supabase1.jpg"></div>
+                        </div>
+                    </div>
+
+                    <div class="doc-step">
+                        <div class="doc-step-num">2</div>
+                        <div class="doc-step-content">
+                            <h4>进入 SQL 编辑器</h4>
+                            <p>在项目控制台的左侧边栏中，点击 <strong>SQL Editor</strong> 进入 SQL 编辑器页面。</p>
+                        </div>
+                    </div>
+
+                    <!-- 图片占位：supabase2.jpg -->
+                    <div class="img-showcase">
+                        <div class="img-item">
+                            <div class="img-bg" data-bg="supabase2.jpg"></div>
+                        </div>
+                    </div>
+
+                    <div class="doc-step">
+                        <div class="doc-step-num">3</div>
+                        <div class="doc-step-content">
+                            <h4>粘贴 SQL 并执行</h4>
+                            <p>点击 <strong>New Query</strong> 新建查询，把从 OimiChat 控制台复制的 SQL 完整粘贴到编辑器中。</p>
+                            <p>点击 <strong>Run</strong> 或按 <code>Cmd/Ctrl + Enter</code> 执行。执行成功后，即完成建表配置。</p>
+                        </div>
+                    </div>
+
+                    <!-- 图片占位：supabase3.jpg -->
+                    <div class="img-showcase">
+                        <div class="img-item">
+                            <div class="img-bg" data-bg="supabase3.jpg"></div>
+                        </div>
+                    </div>
+
+                    <div class="doc-note tip" style="margin-bottom: 0;">
+                        <i class="fa-solid fa-lightbulb"></i> 这段 SQL 会创建聊天历史、长期记忆、消息计数三张表。执行成功后，回到 OimiChat 控制台的记忆库页面，填入你的 Supabase URL 和 Service Role Key 并保存，记忆库即可生效。后续若平台升级表结构，控制台里的 SQL 也会同步更新，直接重新复制执行即可。
+                    </div>
+                </div>
+
+                <div class="doc-card">
+                    <div class="doc-card-title"><i class="fa-solid fa-syringe"></i> 植入记忆</div>
+                    <p class="doc-text">在页面下方区域手动为角色添加一条长期记忆，立即写入角色记忆中。</p>
+                    <ul class="doc-list">
+                        <li><strong>未接入 Supabase</strong>：植入到「记忆」区（平台库，封顶 100 条，展示最新 50 条）。</li>
+                        <li><strong>已接入 Supabase</strong>：植入到「记忆库」区（你自己的库，无上限，展示最新 50 条）。</li>
+                    </ul>
+                    <p class="doc-text" style="margin-bottom: 0;">植入后无需额外保存，立即写入当前生效的记忆存储区域。</p>
+                </div>
+            </section>
+
+            <!-- 语音消息 -->
+            <section class="doc-section" id="voice">
+                <div class="doc-header">
+                    <h2><i class="fa-solid fa-microphone"></i> 语音消息</h2>
+                    <p>让TA能“开口说话”。</p>
+                </div>
+                <div class="doc-card">
+                    <div class="doc-card-title"><i class="fa-solid fa-power-off"></i> 语音总开关</div>
+                    <p class="doc-text">开启后每条回复都发语音；关闭后触发词和随机概率生效。</p>
+                </div>
+                <div class="doc-card">
+                    <div class="doc-card-title"><i class="fa-solid fa-dice"></i> 随机触发概率</div>
+                    <p class="doc-text">总开关关闭时，按此概率随机发送语音消息（关键词触发不受概率影响）。</p>
+                </div>
+                <div class="doc-card">
+                    <div class="doc-card-title"><i class="fa-solid fa-waveform"></i> 音频克隆（官方中转）</div>
+                    <ul class="doc-list">
+                        <li>上传一段10~30秒的音频样本，通过平台克隆专属音色。</li>
+                        <li>克隆成功后，在下方配置栏填写你的Minimax账号信息（API Key、Group ID）并保存，即可启用语音。</li>
+                        <li>官方模式可留空Key和Group，使用平台托管账号。</li>
+                    </ul>
+
+                    <!-- ★ MiniMax 语音克隆计费说明 ★ -->
+                    <div class="doc-note warn">
+                        <i class="fa-solid fa-coins"></i> <strong>MiniMax 语音克隆计费说明</strong><br>
+                        按照 MiniMax 官网规则，<strong>初次调用复刻音色进行语音合成时，会扣除 9.9 元音色解锁费用</strong>（仅首次使用该 voice_id 时收取，未激活使用的候选音色不产生复刻费）。此后每次语音合成都<strong>按实际字符数计费</strong>，参考价格约为 <strong>2 元/万字符</strong>（具体以 MiniMax 官网实时价格为准）。
+                        <ul class="doc-list" style="margin-top: 8px; margin-bottom: 0;">
+                            <li><strong>首次解锁</strong>：9.9 元 / 音色（在首次使用该音色合成语音时扣取）。</li>
+                            <li><strong>后续合成</strong>：按字符数计费，约 2 元 / 万字符。</li>
+                            <li>克隆出的试听音频同样属于语音合成调用，会按字符数计费。</li>
+                        </ul>
+                    </div>
+                </div>
+                <div class="doc-card">
+                    <div class="doc-card-title"><i class="fa-solid fa-sliders-h"></i> 高级参数</div>
+                    <p class="doc-text">可调整语速、音量、音调，并可预设或自定义情绪（高兴、悲伤、生气等），使语音更生动。音效标签（如空旷回音）和语气词标签（如笑声）可进一步丰富表现力。</p>
+                </div>
+            </section>
+
+            <!-- 表情包 -->
+            <section class="doc-section" id="emoji">
+                <div class="doc-header">
+                    <h2><i class="fa-solid fa-face-smile"></i> 情绪表情包</h2>
+                    <p>AI自动判断情绪并发送表情包。</p>
+                </div>
+                <div class="doc-card">
+                    <div class="doc-card-title"><i class="fa-solid fa-toggle-on"></i> 表情包功能</div>
+                    <p class="doc-text">开启后，AI回复会自动判断情绪并附带表情包。</p>
+                </div>
+                <div class="doc-card">
+                    <div class="doc-card-title"><i class="fa-solid fa-percent"></i> 发送概率</div>
+                    <p class="doc-text">命中触发词时实际发送表情包的概率，可滑动调整（1%~100%）。</p>
+                </div>
+            </section>
+
+            <!-- 主动消息 -->
+            <section class="doc-section" id="proactive">
+                <div class="doc-header">
+                    <h2><i class="fa-solid fa-paper-plane"></i> 主动消息</h2>
+                    <p>让TA在特定时间主动给你发消息。</p>
+                </div>
+                <div class="doc-card">
+                    <div class="doc-card-title"><i class="fa-solid fa-greeting"></i> 主动问候</div>
+                    <ul class="doc-list">
+                        <li><strong>消息内容</strong>：可填写偏好风格或主题，留空则使用角色随机消息。</li>
+                        <li><strong>时间段</strong>：设置全天候或自定义时间段（如9:00~21:00）。</li>
+                    </ul>
+                </div>
+                <div class="doc-card">
+                    <div class="doc-card-title"><i class="fa-solid fa-clock"></i> 定时问候</div>
+                    <ul class="doc-list">
+                        <li><strong>触发时间</strong>：设定一个具体时间（如12:00）。</li>
+                        <li><strong>消息内容</strong>：可填写风格主题，留空则随机发送。</li>
+                    </ul>
+                </div>
+                <div class="doc-note">保存后会立即生效。如果消息内容留空，角色会根据你的历史聊天记录生成个性化问候。</div>
+            </section>
+
+            <!-- 邮件来信 -->
+            <section class="doc-section" id="mail">
+                <div class="doc-header">
+                    <h2><i class="fa-solid fa-envelope"></i> 邮件来信</h2>
+                    <p>让角色通过邮件给你写信。每个 OimiChat 用户拥有独立的 @agent.qq.com 发件身份。</p>
+                </div>
+
+                <div class="doc-card">
+                    <div class="doc-card-title"><i class="fa-solid fa-id-card"></i> 什么是 Agent Mail</div>
+                    <p class="doc-text">Agent Mail 是腾讯 QQ 邮箱为 AI Agent 提供的专属邮箱服务。开启后，你的伙伴会拥有一个形如 <code>yourname@agent.qq.com</code> 的专属发件地址，用这个地址给你写信。凭据按用户隔离存储在服务器端，你<strong>不需要手动填写 SMTP Token 或密码</strong>。</p>
+                </div>
+
+                <div class="doc-card" style="border: 1px solid rgba(255, 225, 101, 0.3);">
+                    <div class="doc-card-title"><i class="fa-solid fa-right-to-bracket"></i> 授权流程（必须完成一次）</div>
+                    <p class="doc-text">首次使用邮件功能，需要完成一次 OAuth 授权。由于微信内置浏览器限制 OAuth 跳转，<strong>必须跳出微信</strong>在系统浏览器中完成扫码。</p>
+
+                    <div class="doc-step">
+                        <div class="doc-step-num">1</div>
+                        <div class="doc-step-content">
+                            <h4>点击「发起授权」</h4>
+                            <p>在邮件配置卡片中点击「发起授权」，后端会启动 CLI 并生成专属授权链接。</p>
+                        </div>
+                    </div>
+                    <div class="doc-step">
+                        <div class="doc-step-num">2</div>
+                        <div class="doc-step-content">
+                            <h4>复制链接到浏览器打开</h4>
+                            <p>页面会弹出授权链接，<strong>复制它，粘贴到手机系统浏览器或电脑浏览器</strong>中打开。请勿在微信内置浏览器中直接打开。</p>
+                        </div>
+                    </div>
+                    <div class="doc-step">
+                        <div class="doc-step-num">3</div>
+                        <div class="doc-step-content">
+                            <h4>微信扫码确认</h4>
+                            <p>在浏览器中打开链接后，用微信扫码并确认授权。完成后页面会自动刷新为「已授权」。</p>
+                        </div>
+                    </div>
+                    <div class="doc-step">
+                        <div class="doc-step-num">4</div>
+                        <div class="doc-step-content">
+                            <h4>等待轮询完成</h4>
+                            <p>前端会自动轮询授权状态，成功后会显示你的专属邮箱地址（如 <code>xxx@agent.qq.com</code>）。如果 30 秒内未成功，可以重新点击「发起授权」。</p>
+                        </div>
+                    </div>
+
+                    <div class="doc-note warn" style="margin-bottom: 0;">
+                        <i class="fa-solid fa-triangle-exclamation"></i> <strong>注意</strong>：授权链接是 OAuth 生成的原始字符串，<strong>不要做任何修改、拼接或编码</strong>，否则授权会失败。部分用户可能需要重复发起一次授权才能成功，属于正常现象。
+                    </div>
+                </div>
+
+                <div class="doc-card">
+                    <div class="doc-card-title"><i class="fa-solid fa-paper-plane"></i> 发送方式与配额</div>
+                    <p class="doc-text">授权完成后，邮件发送由后台自动完成，你无需再配置发件服务器或 Token。凭据按你的账号隔离存储，其他用户无法读取。</p>
+                    <ul class="doc-list">
+                        <li><strong>自动发信</strong>：在对话中触发或通过定时任务，角色会自动写信并发送到你的接收邮箱。</li>
+                        <li><strong>每日配额</strong>：每个 @agent.qq.com 邮箱每天最多发送 <strong>50 封</strong>，超过后当天无法继续发送。</li>
+                    </ul>
+                </div>
+
+                <div class="doc-card">
+                    <div class="doc-card-title"><i class="fa-solid fa-pen-nib"></i> 内容偏好</div>
+                    <p class="doc-text">可描述你希望收到怎样的信，如“温柔的语气，每封信分享一件今天的小事，最后说一句晚安…”</p>
+                </div>
+
+                <div class="doc-card">
+                    <div class="doc-card-title"><i class="fa-solid fa-calendar-heart"></i> 节日邮件</div>
+                    <p class="doc-text">可勾选生日祝福、传统节日（七夕、中秋等）、520 特别等场景，角色会自动发送邮件。</p>
+                </div>
+
+                <div class="doc-note tip">也可以随时在对话中说<b>“发邮件给我”</b>，角色会立刻根据对话内容写一封信。</div>
+            </section>
+
+            <!-- Vapi电话 -->
+            <section class="doc-section" id="vapi">
+                <div class="doc-header">
+                    <h2><i class="fa-solid fa-phone-volume"></i> Vapi · 电话拨号</h2>
+                    <p>让AI可以主动拨打你的电话。以下是详细配置步骤：</p>
+                </div>
+
+                <div class="doc-note warn">
+                    <i class="fa-solid fa-triangle-exclamation"></i> <strong>重要提醒</strong>：配置前，请先向你的手机运营商<span style="color:#f87171;font-weight:700;">开启国际漫游功能</span>，否则可能无法正常接听来自Vapi的来电或进行外呼。
+                </div>
+
+                <!-- ★ 配置总览：只填两样 ★ -->
+                <div class="doc-card" style="border: 1px solid rgba(255, 225, 101, 0.35);">
+                    <div class="doc-card-title"><i class="fa-solid fa-circle-check"></i> <span style="color: var(--pink);">你只需要填两样：API Key + Assistant ID</span></div>
+                    <p class="doc-text">在 Vapi 控制台里拿好下面两个值，回填到 OimiChat 控制台对应的输入框即可，<strong>号码不需要你填</strong>：</p>
+                    <ul class="doc-list">
+                        <li><strong>API Key</strong>：Vapi 的 Private API Key（不是 Public Key）。</li>
+                        <li><strong>Assistant ID</strong>：Assistant 页面里复制的那串 ID。</li>
+                    </ul>
+                    <div class="doc-note tip" style="margin-bottom: 0;">
+                        <i class="fa-solid fa-robot"></i> <strong>号码自动识别</strong>：后端会自动识别你账号下的号码（包括申请到的免费号码），<strong>你不需要手动填写号码</strong>，也不用自己配 Server URL，这些都由平台处理。
+                    </div>
+                </div>
+
+                <div class="doc-card">
+                    <div class="doc-card-title"><i class="fa-solid fa-right-to-bracket"></i> 第一步：登录并获取 API Key</div>
+                    <div class="doc-step">
+                        <div class="doc-step-num">1</div>
+                        <div class="doc-step-content">
+                            <h4>登录 Vapi</h4>
+                            <p>访问 <a href="https://vapi.ai" target="_blank" style="color: var(--pink); text-decoration: underline;">https://vapi.ai</a>，注册或登录你的账号。</p>
+                        </div>
+                    </div>
+                    <div class="doc-step">
+                        <div class="doc-step-num">2</div>
+                        <div class="doc-step-content">
+                            <h4>获取 API Key（注意是 Private 类型）</h4>
+                            <p>访问 <a href="https://dashboard.vapi.ai/org/api-keys" target="_blank" style="color: var(--pink); text-decoration: underline;">https://dashboard.vapi.ai/org/api-keys</a>，创建一个 <strong>Private（私有）API Key</strong> 并复制。注意不要使用 Public Key。</p>
+                            <p>Private Key 授予对你的 Vapi 账户的完整访问权限，请妥善保管，不要分享给他人。</p>
+                        </div>
+                    </div>
+                    <div class="img-showcase">
+                        <div class="img-item">
+                            <div class="img-bg" data-bg="vapi1.jpg"></div>
+                        </div>
+                    </div>
+                </div>
+
+                <div class="doc-card">
+                    <div class="doc-card-title"><i class="fa-solid fa-phone"></i> 第二步：申请一个号码（号码无需回填）</div>
+                    <div class="doc-step">
+                        <div class="doc-step-num">1</div>
+                        <div class="doc-step-content">
+                            <h4>申请免费号码</h4>
+                            <p>在 Vapi 控制台中申请一个免费号码。免费号码仅限美国区号，每个账户最多可申请 <strong>5-10 个免费号码</strong>。</p>
+                            <p><strong>注意</strong>：免费号码<strong>不能主动外呼</strong>，仅支持接听来电。若要主动外呼，需付费号码并开启国际呼叫权限。</p>
+                        </div>
+                    </div>
+                    <div class="img-showcase">
+                        <div class="img-item">
+                            <div class="img-bg" data-bg="vapi2.jpg"></div>
+                        </div>
+                    </div>
+                    <div class="doc-note tip" style="margin-bottom: 0;">
+                        <i class="fa-solid fa-magic"></i> <strong>号码自动识别</strong>：你在 Vapi 申请到的号码，后端会自动读取并使用，<strong>OimiChat 控制台的号码字段不需要你填写</strong>。你只要保证 Vapi 账号下有可用的号码即可。
+                    </div>
+                </div>
+
+                <div class="doc-card">
+                    <div class="doc-card-title"><i class="fa-solid fa-robot"></i> 第三步：配置 Assistant 并复制 ID</div>
+                    <div class="doc-step">
+                        <div class="doc-step-num">1</div>
+                        <div class="doc-step-content">
+                            <h4>创建并配置 Assistant</h4>
+                            <p>配置好你的 Assistant，注意<strong>不要更改 Assistant 的名称</strong>，保持默认即可。</p>
+                        </div>
+                    </div>
+                    <div class="doc-step">
+                        <div class="doc-step-num">2</div>
+                        <div class="doc-step-content">
+                            <h4>复制 Assistant ID</h4>
+                            <p>在 Assistant 的对话页面中，点击右侧的<strong>复制（正方形）按钮</strong>，Assistant ID 会复制到剪贴板中。</p>
+                        </div>
+                    </div>
+                    <div class="img-showcase">
+                        <div class="img-item">
+                            <div class="img-bg" data-bg="vapi3.jpg"></div>
+                        </div>
+                    </div>
+                    <div class="doc-note tip" style="margin-bottom: 0;">
+                        <i class="fa-solid fa-link-slash"></i> <strong>Server URL 不用你配</strong>：OimiChat 会自动把 Server URL 指向平台自己的 webhook（<code>/api/vapi/webhook</code>），这一步无需你在 Vapi 里手动设置。你要做的只是把 <strong>API Key</strong> 和 <strong>Assistant ID</strong> 回填到 OimiChat 控制台。
+                    </div>
+                </div>
+
+                <!-- ★ 第四步：回填 OimiChat 控制台 ★ -->
+                <div class="doc-card" style="border: 1px solid rgba(99, 102, 241, 0.4);">
+                    <div class="doc-card-title"><i class="fa-solid fa-keyboard"></i> 第四步：回填到 OimiChat 控制台</div>
+                    <p class="doc-text">拿到 <strong>API Key</strong> 和 <strong>Assistant ID</strong> 后，回到 OimiChat 控制台的「Vapi 电话」配置区域：</p>
+                    <div class="doc-step">
+                        <div class="doc-step-num">1</div>
+                        <div class="doc-step-content">
+                            <h4>填入 API Key</h4>
+                            <p>把 Vapi 的 Private API Key 粘贴到「Vapi API Key」输入框。</p>
+                        </div>
+                    </div>
+                    <div class="doc-step">
+                        <div class="doc-step-num">2</div>
+                        <div class="doc-step-content">
+                            <h4>填入 Assistant ID</h4>
+                            <p>把复制到的 Assistant ID 粘贴到「Assistant ID」输入框。</p>
+                        </div>
+                    </div>
+                    <div class="doc-step">
+                        <div class="doc-step-num">3</div>
+                        <div class="doc-step-content">
+                            <h4>保存</h4>
+                            <p>点击页面底部「保存」即可。号码、Server URL、webhook 等都由平台自动处理，<strong>你不需要再填其他任何东西</strong>。</p>
+                        </div>
+                    </div>
+                    <div class="doc-note warn" style="margin-bottom: 0;">
+                        <i class="fa-solid fa-triangle-exclamation"></i> <strong>注意</strong>：只填 API Key 和 Assistant ID 即可，<strong>号码不用填</strong>。如果字段里出现了「号码」「Server URL」等输入框，可以留空，平台会自动补全。
+                    </div>
+                </div>
+
+                <div class="doc-card">
+                    <div class="doc-card-title"><i class="fa-solid fa-gift"></i> 免费额度与订阅说明</div>
+                    <div class="doc-text">
+                        <h4 style="margin-bottom: 8px; color: var(--text);">免费额度</h4>
+                        <ul class="doc-list">
+                            <li><strong>免费号码</strong>：每个账户可申请 <strong>5-10 个免费美国号码</strong>，但这些免费号码<strong>不能主动外呼</strong>，仅支持接听来电。</li>
+                            <li><strong>免费分钟数</strong>：Vapi 可能提供一定数量的免费通话分钟数（如 60 分钟），具体以官方页面为准。</li>
+                        </ul>
+                    </div>
+                    <div class="doc-text" style="margin-top: 12px;">
+                        <h4 style="margin-bottom: 8px; color: var(--text);">订阅与计费</h4>
+                        <ul class="doc-list">
+                            <li><strong>平台费</strong>：Vapi 采用按量计费模式，基础平台费约 <strong>$0.05/分钟</strong>。</li>
+                            <li><strong>实际成本</strong>：通话总成本通常为 <strong>$0.07-0.25/分钟</strong>，包含平台费、STT、LLM、TTS 等第三方费用。</li>
+                            <li><strong>并发线路</strong>：默认包含 10 条并发线路，超出部分每线每月 $10。</li>
+                            <li><strong>模型费用</strong>：若自带 API Key 可免除模型费用（Vapi 侧按成本价收取，自带 Key 则为 $0）。<strong style="color: var(--pink);">平台映射即为自建 Vapi Key，请不要在 Vapi 侧再自建，否则会冲突。</strong></li>
+                            <li><strong>Startup 计划</strong>：Vapi 为符合条件的初创团队提供最高 <strong>90,000 分钟</strong>的免费额度（每月 7,500 分钟，持续 12 个月）。</li>
+                        </ul>
+                    </div>
+                    <div class="doc-note warn">
+                        <i class="fa-solid fa-triangle-exclamation"></i> <strong>注意</strong>：免费号码仅限美国区号且不能主动外呼。若要实现主动外呼，需要充值并购买/导入可以外呼的号码，并确保已开启国际呼叫权限。
+                    </div>
+                </div>
+
+                <!-- ★ Vapi 充值步骤 ★ -->
+                <div class="doc-card" style="border: 1px solid rgba(255, 225, 101, 0.35);">
+                    <div class="doc-card-title"><i class="fa-solid fa-credit-card"></i> 如何给 Vapi 充值</div>
+                    <p class="doc-text">要实现主动外呼、购买付费号码，或使用超过免费额度的通话分钟数，需要先给 Vapi 充值 Credits。步骤如下：</p>
+
+                    <div class="doc-step">
+                        <div class="doc-step-num">1</div>
+                        <div class="doc-step-content">
+                            <h4>登录并找到账单页面</h4>
+                            <p>登录 <a href="https://dashboard.vapi.ai" target="_blank" style="color: var(--pink); text-decoration: underline;">Vapi Dashboard</a>，确保左上角选中了正确的组织（Organization）。然后根据你的界面版本找到账单入口：</p>
+                            <ul class="doc-list" style="margin-top: 6px; margin-bottom: 0;">
+                                <li>如果侧边栏显示 <strong>Billing &amp; Payment</strong>，直接点击进入。</li>
+                                <li>如果显示 <strong>Settings</strong>，则进入 <strong>Settings → Billing &amp; Add-Ons</strong>。</li>
+                            </ul>
+                        </div>
+                    </div>
+
+                    <div class="doc-step">
+                        <div class="doc-step-num">2</div>
+                        <div class="doc-step-content">
+                            <h4>添加支付方式</h4>
+                            <p>在 <strong>Payment method</strong> 板块，输入账单邮箱和信用卡信息（通常支持 Visa / Mastercard 等），然后保存。这是后续购买和自动充值的前提。</p>
+                        </div>
+                    </div>
+
+                    <div class="doc-step">
+                        <div class="doc-step-num">3</div>
+                        <div class="doc-step-content">
+                            <h4>购买 Credits</h4>
+                            <p>点击页面上的 <strong>Buy credits</strong> 按钮。你可以选择预设金额，或手动输入自定义金额，<strong>最低购买金额通常为 $10</strong>。确认后，通过发卡行的验证即可完成支付，积分会立即到账。</p>
+                        </div>
+                    </div>
+
+                    <div class="doc-note tip" style="margin-bottom: 0;">
+                        <i class="fa-solid fa-lightbulb"></i> <strong>提示</strong>：充值完成后，建议回到 Vapi 控制台确认 Credits 余额已到账，再前往购买付费号码或进行外呼测试。若支付被拒，通常是发卡行的跨境/风控拦截，联系发卡行放行即可。
+                    </div>
+                </div>
+
+                <!-- ★ 模型映射与回退 ★ -->
+                <div class="doc-card">
+                    <div class="doc-card-title"><i class="fa-solid fa-diagram-project"></i> 模型映射与回退</div>
+                    <p class="doc-text">通话效果依赖“AI模型”页的配置，以下组件分别复用相关配置并消耗相应额度：</p>
+                    <ul class="doc-list">
+                        <li><strong>LLM · 主对话模型</strong>：复用 <b>AI 模型页</b> 的主对话模型配置，通话中的对话内容将消耗该模型的调用额度。</li>
+                        <li><strong>STT · 语音识别</strong>：复用 <b>AI 模型页</b> 的语音识别模型配置，将用户的语音转为文字，按音频时长计费。</li>
+                        <li><strong>TTS · 语音合成 Minimax</strong>：复用 <b>AI 模型页</b> 的语音合成配置，将回复文本转为语音，按字符数计费。</li>
+                    </ul>
+                    <div class="doc-note warn" style="margin-bottom: 0;">
+                        <i class="fa-solid fa-rotate-left"></i> <strong>没配齐会自动回退</strong>：如果“AI 模型”页里的语音识别、语音合成（TTS）或主对话模型<strong>没有配齐</strong>，通话将<strong>回退使用 Vapi 默认配置</strong>，不会因为平台侧缺配置而打不通。想让通话完全走你配置的模型和音色，请先把 AI 模型页的相关配置补全并保存。
+                    </div>
+                </div>
+
+                <!-- ★ 自定义 LLM 转发（绕路机制解释） ★ -->
+                <div class="doc-card" style="border: 1px solid rgba(248, 113, 113, 0.35);">
+                    <div class="doc-card-title"><i class="fa-solid fa-route"></i> <span style="color: var(--pink);">为什么需要“绕路”：自定义 LLM 转发说明</span></div>
+                    <p class="doc-text">Vapi 对 LLM 有三条硬性限制，导致平台的模型和中转地址不能直接填进去：</p>
+                    <ul class="doc-list">
+                        <li><strong>白名单厂商</strong>：LLM 只能用 Vapi 认可的官方厂商（OpenAI、Anthropic、Google 等）。</li>
+                        <li><strong>模型名固定枚举</strong>：模型名必须在其列表里，像 <code>deepseek-v4-flash</code> 这种非标准名无法直接选择。</li>
+                        <li><strong>apiKey 不许用户传</strong>：LLM 的 apiKey 由 Vapi 管理，不接受你填自己的中转 key。</li>
+                    </ul>
+                    <p class="doc-text">所以平台的模型和中转地址<strong>不能硬塞进 Vapi</strong>。解法不是硬闯，而是<strong>伪装成标准 OpenAI 客户端</strong>：</p>
+
+                    <div class="relay-diagram">Vapi  ──(<span class="hl">custom-llm</span>, 当普通 OpenAI 客户端)──▶  你的 <span class="hl">/api/vapi/llm/nov</span>
+                                                          │
+                                                          ▼
+                                                平台自己的 Key 调 <span class="hl">deepseek-v4-flash</span></div>
+
+                    <p class="doc-text">具体怎么绕：</p>
+                    <ul class="doc-list">
+                        <li>Vapi 的 Assistant 里把 LLM 类型设为 <code>custom-llm</code>，endpoint 指向 OimiChat 的 <code>/api/vapi/llm/nov</code>。</li>
+                        <li>Vapi 会像调用<strong>普通 OpenAI 接口</strong>一样，把标准格式的 <code>messages</code> 发给这个 endpoint。</li>
+                        <li>你的后端收到请求后，用<strong>平台自己的 Key</strong> 去调 <code>deepseek-v4-flash</code>（或平台配置的任意模型），再把结果按 OpenAI 标准格式返回给 Vapi。</li>
+                        <li>对 Vapi 来说，它只是在调一个“标准 OpenAI 接口”；<strong>模型名、中转地址、密钥全留在平台侧</strong>，白名单和枚举限制完全绕过。</li>
+                        <li>人设仍然从平台的 messages 注入，角色设定不受影响。这条链路已实测返回“嗨”✅。</li>
+                    </ul>
+                    <div class="doc-note tip" style="margin-bottom: 0;">
+                        <i class="fa-solid fa-lightbulb"></i> <strong>一句话理解</strong>：Vapi 只认“标准 OpenAI 客户端”这一种接口形态，平台就在中间搭了一个“翻译层”——Vapi 说 OpenAI 的话，平台翻译成 deepseek-v4-flash 去执行，再把结果翻译回 OpenAI 的话。Vapi 全程不知道背后是谁在干活，限制自然就绕过了。
+                    </div>
+                </div>
+            </section>
+
+            <!-- 地图线下 -->
+            <section class="doc-section" id="map">
+                <div class="doc-header">
+                    <h2><i class="fa-solid fa-map-location-dot"></i> 地图 · 线下模式</h2>
+                    <p>一种沉浸式的角色互动方式。</p>
+                </div>
+                <div class="doc-card">
+                    <div class="doc-card-title"><i class="fa-solid fa-location-dot"></i> 场景地点</div>
+                    <p class="doc-text">在“地图”中，你可以添加或编辑预设地点（如家、办公室、图书馆），并为每个地点设置名称、描述和标签。这定义了你们线下互动的“场景基础”。</p>
+                </div>
+                <div class="doc-card">
+                    <div class="doc-card-title"><i class="fa-solid fa-feather-pointed"></i> 线下叙事</div>
+                    <p class="doc-text">在地点中点击“进入线下模式”，TA会以你设定的视角，基于地点描述和你输入的情节，实时生成生动的叙事文字。</p>
+                    <p class="doc-text">你可以随时选择“人称”（第一/二/三人称）、“风格”（纯文学、日系轻小说等），或要求“润色”、“续写”。退出线下模式后，这段叙事会被总结并记忆。</p>
+
+                    <!-- ★ 字数上限提醒 ★ -->
+                    <div class="doc-note warn" style="margin-top: 0;">
+                        <i class="fa-solid fa-triangle-exclamation"></i> <strong>字数上限提醒</strong><br>
+                        线下模式的文本有硬性字数限制：<strong>写到 6500 字时会先弹窗提醒</strong>，提示你接近上限；<strong>达到 7000 字则强制结束</strong>本次线下叙事。建议提前规划情节节奏，避免在最精彩处被截断。
+                    </div>
+
+                    <!-- ★ 记忆写入机制说明 ★ -->
+                    <div class="doc-note tip" style="margin-bottom: 0;">
+                        <i class="fa-solid fa-book-bookmark"></i> <strong>记忆写入机制</strong><br>
+                        线下模式的「写入记忆」<strong>不是周期性的</strong>——它<strong>不会在写作过程中持续写记忆</strong>。所有记忆都在<strong>退出线下模式时一次性按段批量写入</strong>。因此：<br>
+                        <ul class="doc-list" style="margin-top: 8px; margin-bottom: 0;">
+                            <li>写作过程中不必担心记忆被频繁打断或重复写入。</li>
+                            <li>只有在<strong>正常退出/结束线下模式</strong>时，才会把这次叙事按段落整理后批量写入记忆。</li>
+                            <li>如果中途强制结束（如达到 7000 字上限），系统同样会在结束时按段批量写入已完成的叙事内容。</li>
+                        </ul>
+                    </div>
+                </div>
+            </section>
+
+            <!-- 窥视 -->
+            <section class="doc-section" id="peek">
+                <div class="doc-header">
+                    <h2><i class="fa-solid fa-eye"></i> 窥视</h2>
+                    <p>一个有趣且带点“危险”的功能，让你能“偷偷”查看TA的“秘密”。</p>
+                </div>
+                <div class="doc-card">
+                    <div class="doc-card-title"><i class="fa-solid fa-mobile-screen"></i> 翻查手机</div>
+                    <p class="doc-text">可查看TA的浏览记录、聊天记录、社区动态和相册文件（内容由AI根据角色人设实时生成）。</p>
+                </div>
+                <div class="doc-card">
+                    <div class="doc-card-title"><i class="fa-solid fa-bag-shopping"></i> 翻看随身物</div>
+                    <p class="doc-text">可查看TA的钱包、口袋等物品内容。</p>
+                </div>
+                <div class="doc-note warn"><i class="fa-solid fa-triangle-exclamation"></i> 部分内容会“上锁”，强制解锁有30%概率被TA发现，触发特殊对话后果自负。请谨慎使用。</div>
+            </section>
+
+        </main>
+    </div>
+
+    <!-- ===== 全屏图片查看器 ===== -->
+    <div class="image-viewer" id="imageViewer">
+        <span class="image-viewer-close" id="imageViewerClose">&times;</span>
+        <img src="" alt="图片预览" id="imageViewerImg">
+    </div>
+
+    <script>
+        // ===== 侧边栏导航高亮 =====
+        const sidebarLinks = document.querySelectorAll('.sidebar-link');
+        const sections = document.querySelectorAll('.doc-section');
+
+        window.addEventListener('scroll', () => {
+            let current = 'welcome';
+            sections.forEach(section => {
+                if (window.scrollY >= section.offsetTop - 120) {
+                    current = section.id;
+                }
+            });
+            sidebarLinks.forEach(link => {
+                link.classList.toggle('active', link.getAttribute('href') === `#${current}`);
+            });
+        });
+
+        sidebarLinks.forEach(link => {
+            link.addEventListener('click', (e) => {
+                e.preventDefault();
+                const targetId = link.getAttribute('href').substring(1);
+                const targetSection = document.getElementById(targetId);
+                if (targetSection) {
+                    window.scrollTo({
+                        top: targetSection.offsetTop - 80,
+                        behavior: 'smooth'
+                    });
+                }
+            });
+        });
+
+        // ===== 懒加载背景图片 =====
+        const lazyBgElements = document.querySelectorAll('[data-bg]');
+        if ('IntersectionObserver' in window) {
+            const bgObserver = new IntersectionObserver((entries, observer) => {
+                entries.forEach(entry => {
+                    if (entry.isIntersecting) {
+                        const el = entry.target;
+                        el.style.backgroundImage = `url('${el.dataset.bg}')`;
+                        el.classList.add('bg-loaded');
+                        observer.unobserve(el);
+                    }
+                });
+            }, { rootMargin: '100px' });
+            lazyBgElements.forEach(el => bgObserver.observe(el));
+        } else {
+            lazyBgElements.forEach(el => {
+                el.style.backgroundImage = `url('${el.dataset.bg}')`;
+                el.classList.add('bg-loaded');
+            });
+        }
+
+        // ===== 点击图片放大全屏 =====
+        const imageViewer = document.getElementById('imageViewer');
+        const imageViewerImg = document.getElementById('imageViewerImg');
+        const imageViewerClose = document.getElementById('imageViewerClose');
+
+        document.querySelectorAll('.img-bg').forEach(imgBg => {
+            imgBg.style.cursor = 'zoom-in';
+            imgBg.addEventListener('click', () => {
+                const bgImage = imgBg.style.backgroundImage;
+                const urlMatch = bgImage.match(/url\(["']?(.*?)["']?\)/);
+                if (urlMatch && urlMatch[1]) {
+                    imageViewerImg.src = urlMatch[1];
+                    imageViewer.classList.add('active');
+                    document.body.style.overflow = 'hidden';
+                }
+            });
+        });
+
+        imageViewer.addEventListener('click', (e) => {
+            if (e.target === imageViewer) {
+                imageViewer.classList.remove('active');
+                document.body.style.overflow = '';
+            }
+        });
+
+        imageViewerClose.addEventListener('click', () => {
+            imageViewer.classList.remove('active');
+            document.body.style.overflow = '';
+        });
+
+        document.addEventListener('keydown', (e) => {
+            if (e.key === 'Escape') {
+                imageViewer.classList.remove('active');
+                document.body.style.overflow = '';
+            }
+        });
+    </script>
+</body>
+</html>
